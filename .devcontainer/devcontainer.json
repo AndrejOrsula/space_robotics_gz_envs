@@ -1,0 +1,43 @@
+{
+	"name": "${localWorkspaceFolderBasename}",
+	"build": {
+		"context": "${localWorkspaceFolder}",
+		"dockerfile": "${localWorkspaceFolder}/Dockerfile",
+		"cacheFrom": "andrejorsula/space_robotics_gz_envs"
+	},
+	"workspaceFolder": "/root/ws",
+	"workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/root/ws",
+	"runArgs": [
+		// Network mode
+		"--network=host",
+		"--ipc=host",
+		// NVIDIA GPU
+		"--gpus=all",
+		// Other GPUs
+		"--device=/dev/dri:/dev/dri",
+		"--group-add=video"
+	],
+	"mounts": [
+		/// Common
+		// Time
+		"type=bind,source=/etc/localtime,target=/etc/localtime,readonly",
+		"type=bind,source=/etc/timezone,target=/etc/timezone,readonly",
+		// GUI (X11)
+		"type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix",
+		"type=bind,source=${localEnv:TMPDIR:/tmp}/xauth_docker_vsc_${localWorkspaceFolderBasename},target=${localEnv:TMPDIR:/tmp}/xauth_docker_vsc_${localWorkspaceFolderBasename}"
+	],
+	"containerEnv": {
+		// GUI (X11)
+		"DISPLAY": "${localEnv:DISPLAY}",
+		"XAUTHORITY": "${localEnv:TMPDIR:/tmp}/xauth_docker_vsc_${localWorkspaceFolderBasename}",
+		// NVIDIA GPU
+		"NVIDIA_VISIBLE_DEVICES": "all",
+		"NVIDIA_DRIVER_CAPABILITIES": "all"
+	},
+	"initializeCommand": "XAUTH=\"${localEnv:TMPDIR:/tmp}/xauth_docker_vsc_${localWorkspaceFolderBasename}\"; touch \"${XAUTH}\"; chmod a+r \"${XAUTH}\"; XAUTH_LIST=$(xauth nlist \"${localEnv:DISPLAY}\"); if [ -n \"${XAUTH_LIST}\" ]; then echo \"${XAUTH_LIST}\" | sed -e 's/^..../ffff/' | xauth -f \"${XAUTH}\" nmerge -; fi",
+	"customizations": {
+		"vscode": {
+			"extensions": []
+		}
+	}
+}

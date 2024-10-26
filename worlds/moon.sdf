@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="moon">
+    <!-- Physics -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <physics name="dedfault_physics" type="ignored">
+      <max_step_size>0.025</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- World plugins -->
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact" />
+
+    <!-- Moon gravity -->
+    <gravity>0.0 0.0 -1.622</gravity>
+
+    <!-- Scene -->
+    <scene>
+      <ambient>0 0 0</ambient>
+      <background>0 0 0</background>
+      <grid>false</grid>
+    </scene>
+
+    <!--             -->
+    <!-- GUI plugins -->
+    <!--             -->
+    <gui>
+      <plugin filename="MinimalScene" name="3D View">
+        <gz-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </gz-gui>
+
+        <engine>ogre2</engine>
+        <ambient_light>0 0 0</ambient_light>
+        <background_color>0 0 0</background_color>
+        <shadows>
+          <texture_size light_type="directional">8192</texture_size>
+        </shadows>
+        <camera_pose>-2.5 -4.0 1.75 0 0.4 0.785</camera_pose>
+      </plugin>
+
+      <plugin filename="WorldControl" name="World control">
+        <gz-gui>
+          <title>World control</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">72</property>
+          <property type="double" key="width">121</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="left" target="left" />
+            <line own="bottom" target="bottom" />
+          </anchors>
+        </gz-gui>
+
+        <play_pause>true</play_pause>
+        <step>true</step>
+        <start_paused>true</start_paused>
+        <use_event>true</use_event>
+      </plugin>
+
+      <plugin filename="WorldStats" name="World stats">
+        <gz-gui>
+          <title>World stats</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">110</property>
+          <property type="double" key="width">290</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="right" target="right" />
+            <line own="bottom" target="bottom" />
+          </anchors>
+        </gz-gui>
+
+        <sim_time>true</sim_time>
+        <real_time>true</real_time>
+        <real_time_factor>true</real_time_factor>
+        <iterations>true</iterations>
+      </plugin>
+
+      <plugin filename="Teleop" name="Teleoperation" />
+      <plugin filename="ResourceSpawner" name="Resource Spawner" />
+    </gui>
+
+    <!--              -->
+    <!-- Illumination -->
+    <!--              -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 100.0 0 0 0</pose>
+      <diffuse>1.0 1.0 1.0 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>0.25 -0.5 -0.1</direction>
+    </light>
+
+    <!--        -->
+    <!-- Models -->
+    <!--        -->
+
+    <!-- Robot -->
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/EXPLORER_R2_SENSOR_CONFIG_1
+      </uri>
+      <pose>0 0 0.45 0 0 0</pose>
+      <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+        <topic>/cmd_vel</topic>
+        <left_joint>left_front_wheel</left_joint>
+        <left_joint>left_rear_wheel</left_joint>
+        <right_joint>right_front_wheel</right_joint>
+        <right_joint>right_rear_wheel</right_joint>
+        <wheel_separation>0.275</wheel_separation>
+        <wheel_radius>0.31</wheel_radius>
+        <max_linear_acceleration>1.0</max_linear_acceleration>
+        <min_linear_acceleration>-1.0</min_linear_acceleration>
+        <max_angular_acceleration>2.0</max_angular_acceleration>
+        <min_angular_acceleration>-2.0</min_angular_acceleration>
+        <max_linear_velocity>0.5</max_linear_velocity>
+        <min_linear_velocity>-0.5</min_linear_velocity>
+        <max_angular_velocity>1.0</max_angular_velocity>
+        <min_angular_velocity>-1.0</min_angular_velocity>
+      </plugin>
+    </include>
+
+    <!-- Terrain -->
+    <include>
+      <uri>
+        model://lunar_surface0
+      </uri>
+      <pose>0 0 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <!-- Objects -->
+    <include>
+      <uri>
+        model://lunar_rock0
+      </uri>
+      <pose>0.05 -3.0 0.1 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock1
+      </uri>
+      <pose>-0.05 -3.0 0.2 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock2
+      </uri>
+      <pose>0.1 -3.0 0.3 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock3
+      </uri>
+      <pose>-0.1 -3.0 0.4 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock4
+      </uri>
+      <pose>0.05 -3.0 0.5 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock5
+      </uri>
+      <pose>-0.05 -3.0 0.6 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock6
+      </uri>
+      <pose>0.1 -3.0 0.7 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock7
+      </uri>
+      <pose>-0.1 -3.0 0.8 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock8
+      </uri>
+      <pose>0.05 -3.1 0.1 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock9
+      </uri>
+      <pose>-0.05 -3.1 0.2 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock10
+      </uri>
+      <pose>0.1 -3.1 0.3 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock11
+      </uri>
+      <pose>-0.1 -3.1 0.4 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock12
+      </uri>
+      <pose>0.05 -3.1 0.5 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock13
+      </uri>
+      <pose>-0.05 -3.1 0.6 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock14
+      </uri>
+      <pose>0.1 -3.1 0.7 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        model://lunar_rock15
+      </uri>
+      <pose>-0.1 -3.1 0.8 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>

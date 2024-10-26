@@ -1,0 +1,11 @@
+## Dump files
+**/core.*
+
+## Docker
+Dockerfile*
+.docker/
+.dockerignore
+
+## Git
+.git/
+.gitignore

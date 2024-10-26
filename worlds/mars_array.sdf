@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="mars_array">
+    <!-- Physics -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <physics name="dedfault_physics" type="ignored">
+      <max_step_size>0.025</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- World plugins -->
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact" />
+
+    <!-- Mars gravity -->
+    <gravity>0.0 0.0 -3.73</gravity>
+
+    <!-- Scene -->
+    <scene>
+      <ambient>0 0 0</ambient>
+      <background>0.7 0.5 0.3</background>
+      <grid>false</grid>
+    </scene>
+
+    <!--             -->
+    <!-- GUI plugins -->
+    <!--             -->
+    <gui>
+      <plugin filename="MinimalScene" name="3D View">
+        <gz-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </gz-gui>
+
+        <engine>ogre2</engine>
+        <ambient_light>0 0 0</ambient_light>
+        <background_color>0.7 0.5 0.3</background_color>
+        <shadows>
+          <texture_size light_type="directional">8192</texture_size>
+        </shadows>
+        <camera_pose>-12.5 12.5 12.5 0 0.785 -0.785</camera_pose>
+      </plugin>
+
+      <plugin filename="WorldControl" name="World control">
+        <gz-gui>
+          <title>World control</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">72</property>
+          <property type="double" key="width">121</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="left" target="left" />
+            <line own="bottom" target="bottom" />
+          </anchors>
+        </gz-gui>
+
+        <play_pause>true</play_pause>
+        <step>true</step>
+        <start_paused>true</start_paused>
+        <use_event>true</use_event>
+      </plugin>
+
+      <plugin filename="WorldStats" name="World stats">
+        <gz-gui>
+          <title>World stats</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">110</property>
+          <property type="double" key="width">290</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="right" target="right" />
+            <line own="bottom" target="bottom" />
+          </anchors>
+        </gz-gui>
+
+        <sim_time>true</sim_time>
+        <real_time>true</real_time>
+        <real_time_factor>true</real_time_factor>
+        <iterations>true</iterations>
+      </plugin>
+
+      <plugin filename="ResourceSpawner" name="Resource Spawner" />
+    </gui>
+
+    <!--              -->
+    <!-- Illumination -->
+    <!--              -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 100.0 0 0 0</pose>
+      <diffuse>1.0 1.0 1.0 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.25 -0.25</direction>
+    </light>
+
+    <!--        -->
+    <!-- Models -->
+    <!--        -->
+
+    <!-- Terrains -->
+    <include>
+      <uri>
+        model://martian_surface1
+      </uri>
+      <pose>-11.0 -11.0 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>
+        model://martian_surface2
+      </uri>
+      <pose>-11.0 11.0 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>
+        model://martian_surface3
+      </uri>
+      <pose>11.0 -11.0 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>
+        model://martian_surface4
+      </uri>
+      <pose>11.0 11.0 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+  </world>
+</sdf>

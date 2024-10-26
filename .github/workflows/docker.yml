@@ -1,0 +1,81 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "docs/**"
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  docker:
+    permissions:
+      packages: write
+      contents: read
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        dockerfile:
+          - Dockerfile
+    steps:
+      ## Free up space by removing unnecessary files
+      - name: Maximize build space
+        uses: AdityaGarg8/remove-unwanted-software@v4
+        with:
+          remove-android: "true"
+          remove-cached-tools: "true"
+          remove-codeql: "true"
+          remove-docker-images: "true"
+          remove-dotnet: "true"
+          remove-haskell: "true"
+          remove-large-packages: "true"
+
+      - uses: actions/checkout@v4
+
+      ## Login to Docker Hub and/or GitHub container registry
+      - name: Login to GitHub container registry
+        if: ${{ github.event_name == 'release' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        if: ${{ github.event_name == 'release' && env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_PASSWORD != '' }}
+        id: login-dockerhub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      ## Extract metadata (tags, labels) from Git reference and GitHub events for the Docker image
+      - name: Extract metadata
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            name=ghcr.io/${{ github.repository }},enable=true
+            name=${{ github.repository }},enable=${{ steps.login-dockerhub.outcome == 'success' }}
+
+      ## Build and push if the workflow was triggered by a release
+      - name: Build (and push on release)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: ${{ github.event_name == 'release' && matrix.dockerfile == 'Dockerfile' }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}

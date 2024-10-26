@@ -1,0 +1,4 @@
+[submodule "assets/srb_assets"]
+	path = assets/srb_assets
+	url = https://github.com/AndrejOrsula/srb_assets
+	branch = main
