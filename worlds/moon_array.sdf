@@ -98,6 +98,7 @@
       <pose>0 0 100.0 0 0 0</pose>
       <diffuse>1.0 1.0 1.0 1</diffuse>
       <specular>0.2 0.2 0.2 1</specular>
+      <intensity>5</intensity>
       <attenuation>
         <range>1000</range>
         <constant>0.9</constant>
