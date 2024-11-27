@@ -56,7 +56,7 @@ PROCGEN_CMD=(
     --overwrite_min_age -1
     --seed "${SEED}"
     --num_assets 1
-    --geometry_nodes '{"LunarTerrain": {"density": 0.08, "scale": [42.0, 42.0, 4.0], "flat_area_size": 2.0, "rock_mesh_boolean": false}}'
+    --geometry_nodes '{"LunarTerrain": {"density": 0.08, "scale": [40.0, 40.0, 4.0], "flat_area_size": 2.0, "rock_mesh_boolean": false}}'
     --material LunarSurface
     --texture_resolution 4096
     --render_samples 2
