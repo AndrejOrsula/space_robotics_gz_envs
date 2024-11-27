@@ -114,14 +114,18 @@ You can launch Gazebo with one of the included worlds by passing its SDF basenam
 .docker/run.bash gz sim moon.sdf
 ```
 
-```bash
-# Grid (2x2) of lunar surfaces with some solar panels
-.docker/run.bash gz sim moon_array.sdf
-```
+https://github.com/user-attachments/assets/019b57b3-17ee-4ca7-aef8-03bcf408268f
 
 ```bash
 # Martian surface with a rover (robot requires tuning)
 .docker/run.bash gz sim mars.sdf
+```
+
+https://github.com/user-attachments/assets/7a33dcea-5f39-4340-a71d-284fe89fd74c
+
+```bash
+# Grid (2x2) of lunar surfaces with some solar panels
+.docker/run.bash gz sim moon_array.sdf
 ```
 
 ```bash
