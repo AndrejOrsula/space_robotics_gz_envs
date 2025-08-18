@@ -40,7 +40,7 @@ jobs:
           remove-haskell: "true"
           remove-large-packages: "true"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       ## Login to Docker Hub and/or GitHub container registry
       - name: Login to GitHub container registry
