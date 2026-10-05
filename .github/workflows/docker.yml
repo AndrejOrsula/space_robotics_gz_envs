@@ -64,7 +64,7 @@ jobs:
       ## Extract metadata (tags, labels) from Git reference and GitHub events for the Docker image
       - name: Extract metadata
         id: metadata
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
             name=ghcr.io/${{ github.repository }},enable=true
